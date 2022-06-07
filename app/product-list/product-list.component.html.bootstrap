@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Adventure Works Product List</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="table-responsive">
+      <table class="table table-hover table-striped" *ngIf="products && products.length">
+        <thead style="font-weight:bold">
+          <tr>
+            <td>Product Number</td>
+            <td>Name</td>
+            <td>Color</td>
+            <td>Standard Cost</td>
+            <td>List Price</td>
+            <td>Size</td>
+            <td>Weight</td>
+            <td>Product Category</td>
+            <td>Product Model</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td>{{product.ProductNumber}}</td>
+            <td>{{product.Name}}</td>
+            <td>{{product.Color}}</td>
+            <td>{{product.StandardCost}}</td>
+            <td>{{product.ListPrice}}</td>
+            <td>{{product.Size}}</td>
+            <td>{{product.Weight}}</td>
+            <td>{{product.ProductCategory}}</td>
+            <td>{{product.ProductModel}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="mat-elevation-z8" style="margin-bottom:10px;min-width:600px">
+      <h3 style="padding:10px;padding-bottom:0px">Adventure Works Product Catalog</h3>
+      <mat-expansion-panel class="mat-elevation-z0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Filter: {{filtersDisplay}}</mat-panel-title>
+          <mat-panel-description></mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field style="max-width:150px">
+          <mat-select #filterColumn placeholder="Column" [(ngModel)]="filterColumn.value">
+            <mat-option *ngFor="let column of displayedColumns" [value]="column">{{column}}</mat-option>
+          </mat-select>
+          <button mat-button *ngIf="filterColumn.value" matSuffix mat-icon-button aria-label="Clear" (click)="filterColumn.value='';filterValue.value=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field>
+          <input #filterValue matInput placeholder="Value" [(ngModel)]="filterValue.value">
+          <button mat-button *ngIf="filterValue.value" matSuffix mat-icon-button aria-label="Clear" (click)="filterValue.value=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <button mat-raised-button (click)="applyFilter(filterColumn.value, filterValue.value);filterColumn.value='';filterValue.value=''">Apply Filter</button>
+        <button mat-raised-button (click)="filterColumn.value='';filterValue.value='';clearFilters()">Clear Filters</button>
+      </mat-expansion-panel>
+    </div>
+  </div>
+</div>
+<div class="row" style="margin-bottom:25px">
+  <div class="col-xs-12">
+    <div class="mat-elevation-z8" *ngIf="products && products.length" style="min-width:600px">
+      <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortEvent($event)" [matSortDisableClear]="true">
+        <!-- column definitions -->
+        <ng-container matColumnDef="Product Number">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Product Number</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.ProductNumber}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.Name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Color">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Color</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.Color}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Standard Cost">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Standard Cost</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.StandardCost}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="List Price">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>List Price</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.ListPrice}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Size">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Size</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.Size}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Weight">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Weight</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.Weight}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Product Category">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Product Category</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.ProductCategory}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Product Model">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Product Model</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.ProductModel}}</mat-cell>
+        </ng-container>
+
+        <!-- row definitions -->
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+
+      <mat-paginator [length]="totalRecords"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [pageIndex]="page-1"
+                     (page)="pageEvent($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

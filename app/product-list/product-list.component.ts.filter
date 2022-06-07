@@ -1,0 +1,98 @@
+import { Component, OnInit } from '@angular/core';
+
+import { IProductListView } from "./productlistview";
+import { ProductService } from "../product-service/product.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { PageEvent } from "@angular/material/paginator";
+import { Sort } from "@angular/material/sort";
+
+@Component({
+  selector: 'awg-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css']
+})
+export class ProductListComponent implements OnInit {
+  products: IProductListView[] = [];
+  errorMessage: string;
+
+  // material table, paginator, and sort header component variables
+  dataSource: MatTableDataSource<IProductListView>;
+  displayedColumns: string[] = [
+    'Product Number',
+    'Name',
+    'Color',
+    'Standard Cost',
+    'List Price',
+    'Size',
+    'Weight',
+    'Product Category',
+    'Product Model'
+  ];
+  pageSizeOptions: number[] = [5, 10, 20];
+
+  totalRecords: number = 0;
+  pageSize: number = 10;
+  page: number = 1;
+  sort: string = "productNumber";
+  sortDir: string = "asc";
+  filters: { column: string, value: string }[] = [];
+  filtersDisplay: string = this.displayFilters();
+
+  constructor(private _productService: ProductService) { }
+
+  ngOnInit(): void {
+    this.getProducts();
+  }
+
+  getProducts(): void {
+    this._productService.getProducts(this.page, this.pageSize, this.sort, this.sortDir)
+      .subscribe(
+      fspproducts => {
+        this.products = fspproducts.List;
+        this.totalRecords = fspproducts.TotalRecords;
+        this.dataSource = new MatTableDataSource(this.products);
+      },
+      error => this.errorMessage = error
+      );
+  }
+
+  // paginator event
+  pageEvent(event: PageEvent): void {
+    console.log(`pageSize: ${event.pageSize}; page: ${event.pageIndex}`);
+    this.pageSize = event.pageSize;
+    this.page = event.pageIndex + 1;
+    this.getProducts();
+  }
+
+  // sort header event
+  sortEvent(event: Sort): void {
+    console.log(`sort: ${event.active}; sortDir: ${event.direction}`);
+    this.sort = event.active;
+    this.sortDir = event.direction;
+    this.page = 1;
+    this.getProducts();
+  }
+
+  displayFilters(): string {
+    let filtersString: string = "";
+    for (let filter of this.filters) {
+      filtersString += `,${filter.column}:${filter.value}`;
+    }
+    return filtersString.substring(1);
+  }
+
+  applyFilter(column: string, value: string): void {
+    console.log(`column: ${column}, value: ${value}`);
+    this.filters.push({ column: column, value: value });
+    this.filtersDisplay = this.displayFilters();
+    console.log(`filters: ${JSON.stringify(this.filters)}`);
+    console.log(`filters: ${this.filtersDisplay}`);
+  }
+
+  clearFilters(): void {
+    this.filters = [];
+    this.filtersDisplay = this.displayFilters();
+    console.log(`filters: ${JSON.stringify(this.filters)}`);
+    console.log(`filters: ${this.filtersDisplay}`);
+  }
+}
